@@ -2,7 +2,7 @@
 
 
 <p align="center">
-    <img src="./img/visual.jpg" width="700"/> <br />
+    <img src="./img/visual.jpg" width="800"/> <br />
     <em> 
     </em>
 </p>
@@ -19,7 +19,7 @@ Autoregressive image generation aims to predict the next token based on previous
 
 
 <p align="center">
-    <img src="./img/perform.png" width="700"/> <br />
+    <img src="./img/perform.png" width="800"/> <br />
     <em> 
     </em>
 </p>
@@ -45,7 +45,7 @@ wget https://openaipublic.blob.core.windows.net/diffusion/jul-2021/ref_batches/i
 ```
 
 ### Evaluation (ImageNet 256x256) <a name="42"></a> 
-Reproducing AliTok-B
+Evaluating AliTok-B
 ```bash  
 torchrun --nnodes=1 --nproc_per_node=8  sample_imagenet.py config=configs/alitok_b.yaml experiment.output_dir="output/alitok_b"  experiment.generator_checkpoint="weights/alitok_b.bin"  
 
@@ -53,14 +53,14 @@ python3 guided-diffusion/evaluations/evaluator.py VIRTUAL_imagenet256_labeled.np
 ```
 
 
-Reproducing AliTok-L
+Evaluating AliTok-L
 ```bash  
 torchrun --nnodes=1 --nproc_per_node=8  sample_imagenet.py config=configs/alitok_l.yaml experiment.output_dir="output/alitok_l"  experiment.generator_checkpoint="weights/alitok_l.bin"  
 
 python3 guided-diffusion/evaluations/evaluator.py VIRTUAL_imagenet256_labeled.npz output/alitok_l.npz
 ```
 
-Reproducing AliTok-XL
+Evaluating AliTok-XL
 ```bash  
 torchrun --nnodes=1 --nproc_per_node=8  sample_imagenet.py config=configs/alitok_xl.yaml experiment.output_dir="output/alitok_xl"  experiment.generator_checkpoint="weights/alitok_xl.bin"  
 
