@@ -29,13 +29,13 @@ Autoregressive image generation aims to predict the next token based on previous
 
 ### Download Trained Models <a name="41"></a> 
 
-You can download all trained models here, including the [tokenizer weight](https://www.dropbox.com) and the autoregressive model weights as listed below:
+You can download all trained models [here](https://drive.google.com/drive/folders/1dBjcFfClmBvf2cSlelFMT2gMlS8OQOHG?usp=sharing), including the [tokenizer weight](https://drive.google.com/file/d/1Rir4QEJ_HTvZkhcnw9MTfWlSFemcGVIW/view?usp=drive_link) and the autoregressive model weights as listed below:
 
 | AR Model | FID | IS | #Params | 
 |-----------|---------|-------|---------|
-| [AliTok-B](https://www.dropbox.com/scl/fi/f6dpuyjb7fudzxcyhvrhk/checkpoint-last.pth?rlkey=a6i4bo71vhfo4anp33n9ukujb&dl=0) | 1.50    | 305.9  | 177M    |
-| [AliTok-L](https://www.dropbox.com/scl/fi/pxacc5b2mrt3ifw4cah6k/checkpoint-last.pth?rlkey=m48ovo6g7ivcbosrbdaz0ehqt&dl=0) | 1.42    | 326.6    | 318M    |
-| [AliTok-XL](https://www.dropbox.com/scl/fi/1qmfx6fpy3k7j9vcjjs3s/checkpoint-last.pth?rlkey=4lae281yzxb406atp32vzc83o&dl=0) | 1.35    | 318.8    | 662M    |
+| [AliTok-B](https://drive.google.com/file/d/1PNVX9wqePxRjuOKpt4iw6CpIYLlyJWlX/view?usp=sharing) | 1.50    | 305.9  | 177M    |
+| [AliTok-L](https://drive.google.com/file/d/1tmwAa724pNY4FgUsLne2VJVGoK_TBuMa/view?usp=drive_link) | 1.42    | 326.6    | 318M    |
+| [AliTok-XL](https://drive.google.com/file/d/1Vu0UsQfqzZ8HMKFqE2tIGdAcJ6zPXvFd/view?usp=drive_link) | 1.35    | 318.8    | 662M    |
 
 You need to place these weight files, including both the tokenizer weight and autoregressive model weights, in the `weights` folder.
 

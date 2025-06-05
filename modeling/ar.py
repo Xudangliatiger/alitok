@@ -197,8 +197,7 @@ class Block(nn.Module):
             qk_norm: bool = False,
             proj_drop: float = 0.,
             attn_drop: float = 0., 
-            norm_layer: nn.Module = nn.LayerNorm,
-            mlp_layer: nn.Module = Mlp,
+            norm_layer: nn.Module = nn.LayerNorm, 
     ) -> None:
         super().__init__()
         self.norm1 = RMSNorm(dim)
