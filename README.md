@@ -69,7 +69,7 @@ python3 guided-diffusion/evaluations/evaluator.py VIRTUAL_imagenet256_labeled.np
 
 
 ### Training Autoregressive Models <a name="42"></a> 
-Cache tokenizer encoding results
+pretokenize the dataset
 ```bash  
 torchrun --nnodes=1 --nproc_per_node=8 --node_rank=0 pretokenization.py --img_size 256 --batch_size 32 --ten_crop --data_path ${PATH_TO_IMAGENET}
 ```
