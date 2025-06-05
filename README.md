@@ -2,7 +2,7 @@
 
 
 <p align="center">
-    <img src="./img/visual.jpg" width="550"/> <br />
+    <img src="./img/visual.jpg" width="700"/> <br />
     <em> 
     </em>
 </p>
@@ -19,7 +19,7 @@ Autoregressive image generation aims to predict the next token based on previous
 
 
 <p align="center">
-    <img src="./img/perform.png" width="550"/> <br />
+    <img src="./img/perform.png" width="700"/> <br />
     <em> 
     </em>
 </p>
