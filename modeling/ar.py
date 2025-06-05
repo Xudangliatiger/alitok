@@ -1,34 +1,14 @@
-"""This file contains the model definition of TiTok.
-
-Copyright (2024) Bytedance Ltd. and/or its affiliates
-
-Licensed under the Apache License, Version 2.0 (the "License"); 
-you may not use this file except in compliance with the License. 
-You may obtain a copy of the License at 
-
-    http://www.apache.org/licenses/LICENSE-2.0 
-
-Unless required by applicable law or agreed to in writing, software 
-distributed under the License is distributed on an "AS IS" BASIS, 
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
-See the License for the specific language governing permissions and 
-limitations under the License.
-
-Reference: 
-    https://github.com/mlfoundations/open_clip/blob/main/src/open_clip/transformer.py
-    https://github.com/facebookresearch/DiT/blob/main/models.py
+""" Adapted from:
+    https://github.com/bytedance/1d-tokenizer/blob/main/modeling/rar.py
+    https://github.com/FoundationVision/LlamaGen/blob/main/autoregressive/models/gpt.py
 """
-from einops import rearrange
 
+from einops import rearrange
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
 from modeling.modules import BaseModel
 from functools import partial
-from timm.layers import Mlp
-from typing import Optional
-import numpy as np
-import random
 
 
 #################################################################################

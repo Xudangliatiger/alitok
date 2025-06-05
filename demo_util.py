@@ -1,6 +1,7 @@
-
+""" This file is borrowed from:
+    https://github.com/bytedance/1d-tokenizer/blob/main/demo_util.py
+"""
 import torch
-
 from omegaconf import OmegaConf
 from modeling.ar import ARModel
 

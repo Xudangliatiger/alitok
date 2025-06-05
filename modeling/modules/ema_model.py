@@ -1,13 +1,3 @@
-"""This file contains some base class implementation for EMA.
-
-This file may have been modified by Bytedance Ltd. and/or its affiliates (“Bytedance's Modifications”).
-All Bytedance's Modifications are Copyright (year) Bytedance Ltd. and/or its affiliates. 
-
-Reference:
-    https://github.com/huggingface/open-muse/blob/64e1afe033717d795866ab8204484705cd4dc3f7/muse/modeling_ema.py#L8
-"""
-
-
 import copy
 from typing import Any, Iterable, Optional, Union
 

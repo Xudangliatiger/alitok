@@ -1,14 +1,10 @@
-import cv2
 import json
 import os
 import time
 import math
 from pathlib import Path
-import pprint
 import glob
-from collections import defaultdict
 
-from data import SimpleImageDataset, PretoeknizedDataSetJSONL
 import torch
 from torch.utils.data import DataLoader
 from omegaconf import OmegaConf
@@ -17,9 +13,7 @@ from utils.lr_schedulers import get_scheduler
 from modeling.modules import EMAModel, ARLoss 
 from modeling.ar import ARModel
 from demo_util import sample_fn
-import numpy as np
 from utils.viz_utils import make_viz_from_samples, make_viz_from_samples_generation
-from torchinfo import summary
 from utils.loader import CachedFolder
 
 def get_config():
@@ -51,7 +45,6 @@ class AverageMeter(object):
 
         
 def create_model_and_loss_module(config, logger, accelerator):
-    """Creates TiTok model and loss module."""
     logger.info("Creating model and loss module.")
     model_cls = ARModel
     loss_cls = ARLoss
@@ -92,7 +85,6 @@ def create_model_and_loss_module(config, logger, accelerator):
 
 
 def create_optimizer(config, logger, model, loss_module):
-    """Creates optimizer for TiTok and discrminator."""
     logger.info("Creating optimizers.")
     optimizer_config = config.optimizer.params
     learning_rate = optimizer_config.learning_rate
@@ -122,7 +114,6 @@ def create_optimizer(config, logger, model, loss_module):
 
 
 def create_lr_scheduler(config, logger, accelerator, optimizer, discriminator_optimizer=None):
-    """Creates learning rate scheduler for TiTok and discrminator."""
     logger.info("Creating lr_schedulers.")
     lr_scheduler = get_scheduler(
         config.lr_scheduler.scheduler,

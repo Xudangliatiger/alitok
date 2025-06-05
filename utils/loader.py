@@ -1,9 +1,7 @@
 import os
 import numpy as np
 import random
-import torch
 import torchvision.datasets as datasets
-
 
 class ImageFolderWithFilename(datasets.ImageFolder):
     def __getitem__(self, index: int):

@@ -1,3 +1,6 @@
+""" This file is borrowed from:
+    https://github.com/bytedance/1d-tokenizer/blob/main/scripts/train_rar.py
+"""
 import math
 import os
 from pathlib import Path

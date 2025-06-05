@@ -1,3 +1,6 @@
+""" Adapted from:
+    https://github.com/bytedance/1d-tokenizer/blob/main/modeling/titok.py
+"""
 import torch
 import torch.nn as nn
 from collections import OrderedDict
@@ -28,7 +31,6 @@ class VectorQuantizer(torch.nn.Module):
         z = z.float()
         z = rearrange(z, 'b c h w -> b h w c').contiguous()
         z_flattened = rearrange(z, 'b h w c -> (b h w) c')
-        unnormed_z_flattened = z_flattened
 
         if self.use_l2_norm:
             z_flattened = torch.nn.functional.normalize(z_flattened, dim=-1)

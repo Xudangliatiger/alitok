@@ -1,3 +1,6 @@
+""" This file is borrowed from:
+    https://github.com/bytedance/1d-tokenizer/blob/main/sample_imagenet_rar.py
+"""
 import demo_util
 import numpy as np
 import torch

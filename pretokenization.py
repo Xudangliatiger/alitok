@@ -1,19 +1,6 @@
-"""Pretokenization script for TiTok and RAR.
-
-This file may have been modified by Bytedance Ltd. and/or its affiliates (“Bytedance's Modifications”).
-All Bytedance's Modifications are Copyright (year) Bytedance Ltd. and/or its affiliates. 
-
-Reference:
+""" Adapted from:
     https://github.com/LTH14/mar/blob/main/main_cache.py
-
-Example command:
-
-torchrun --nproc_per_node=4 --nnodes=1 --node_rank=0 --rdzv-endpoint=localhost:9999 \
-    pretokenization.py \
-    --img_size 256 \
-    --batch_size 32 \
-    --ten_crop 
-    --data_path ${PATH_TO_IMAGENET} --cached_path ${PATH_TO_SAVE_JSONL}
+    https://github.com/bytedance/1d-tokenizer/blob/main/scripts/pretokenization.py
 """
 import argparse
 import datetime
