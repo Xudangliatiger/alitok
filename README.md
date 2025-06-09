@@ -39,8 +39,10 @@ You can download all trained models [here](https://drive.google.com/drive/folder
 
 You need to place these weight files, including both the tokenizer weight and autoregressive model weights, in the `weights` folder.
 
-Download the VIRTUAL_imagenet256_labeled.npz file for testing
+Prepare ADM evaluation script
 ```
+git clone https://github.com/openai/guided-diffusion.git
+
 wget https://openaipublic.blob.core.windows.net/diffusion/jul-2021/ref_batches/imagenet/256/VIRTUAL_imagenet256_labeled.npz
 ```
 
