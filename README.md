@@ -70,7 +70,7 @@ python3 guided-diffusion/evaluations/evaluator.py VIRTUAL_imagenet256_labeled.np
 ```
 
 ### Training Tokenizer <a name="42"></a> 
-Please refer to train_tokenizer/README_AliTok.md
+Please refer to [train_tokenizer/README_AliTok.md](https://github.com/ali-vilab/alitok/blob/main/train_tokenizer/README_AliTok.md)
 
 ### Training Autoregressive Models <a name="42"></a> 
 Pretokenize the dataset
