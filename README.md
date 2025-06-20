@@ -69,6 +69,8 @@ torchrun --nnodes=1 --nproc_per_node=8  sample_imagenet.py config=configs/alitok
 python3 guided-diffusion/evaluations/evaluator.py VIRTUAL_imagenet256_labeled.npz output/alitok_xl.npz
 ```
 
+### Training Tokenizer <a name="42"></a> 
+Please refer to train_tokenizer/README_AliTok.md
 
 ### Training Autoregressive Models <a name="42"></a> 
 Pretokenize the dataset
