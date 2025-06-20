@@ -7,7 +7,7 @@ During the tokenizer training process, we manually adjusted the learning rate an
 ### ✏️ Usage <a name="4"></a> 
 1. Prepare
 
-    Download ImageNet Dataset and [imagenet_train.txt]((https://drive.google.com/drive/folders/1dBjcFfClmBvf2cSlelFMT2gMlS8OQOHG?usp=sharing)), put imagenet_train.txt in the `train_tokenizer` folder. 
+    Download ImageNet Dataset and [imagenet_train.txt](https://drive.google.com/drive/folders/1dBjcFfClmBvf2cSlelFMT2gMlS8OQOHG?usp=sharing), put imagenet_train.txt in the `train_tokenizer` folder. 
     ```
     cd train_tokenizer
     ```
