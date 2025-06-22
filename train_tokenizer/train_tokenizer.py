@@ -195,7 +195,10 @@ def worker(gpu, cfg):
                 total_step,
                 "generator"
             ) 
-            loss = mse + lpips + vq + gan   
+            if cfg.stage == 'stage1':
+                loss = mse + lpips + vq + gan   
+            elif cfg.stage == 'stage2':
+                loss = mse + lpips + gan 
             # backward
             optimizer.zero_grad()
             scaler.scale(loss).backward() 
