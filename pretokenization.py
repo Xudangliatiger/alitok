@@ -65,7 +65,7 @@ def get_args_parser():
     parser.add_argument('--img_size', default=256, type=int,
                         help='images input size')
     # Dataset parameters
-    parser.add_argument('--data_path', default='/mnt/data/zhongye/datasets/imagenet', type=str,
+    parser.add_argument('--data_path', default='datasets/imagenet', type=str,
                         help='dataset path')
     parser.add_argument('--device', default='cuda',
                         help='device to use for training / testing')
