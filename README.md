@@ -10,7 +10,7 @@
 
 ## 📎 Paper Link <a name="1"></a> 
 
-* AliTok: Towards Sequence Modeling Alignment between Tokenizer and Autoregressive Model ([link](https://arxiv.org/pdf/2506.05289))
+* [AliTok: Towards Sequence Modeling Alignment between Tokenizer and Autoregressive Model](https://arxiv.org/pdf/2506.05289)
 
     Authors: Pingyu Wu, Kai Zhu, Yu Liu, Longxiang Tang, Jian Yang, Yansong Peng, Wei Zhai, Yang Cao, Zheng-Jun Zha
 
