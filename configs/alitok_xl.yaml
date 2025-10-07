@@ -30,6 +30,8 @@ model:
         randomize_temperature: 1.0
         guidance_scale: 13.0
         guidance_scale_pow: 1.4
+        softcfg_strength: 0
+        step_norm: False
         use_checkpoint: False # True to save memory 
         seed: 2
 

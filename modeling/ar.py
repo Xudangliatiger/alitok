@@ -129,7 +129,7 @@ class Attention(nn.Module):
         self.k_cache = None
         self.v_cache = None
 
-    def forward(self, x: torch.Tensor, freqs_cis, attn_mask=None) -> torch.Tensor:
+    def forward(self, x: torch.Tensor, freqs_cis, attn_mask=None, kv_cache_perturbation_weight=1) -> torch.Tensor:
         B, N, C = x.shape
         qkv = self.qkv(x).reshape(B, N, 3, self.num_heads, self.head_dim).permute(2, 0, 3, 1, 4)
         q, k, v = qkv.unbind(0)
@@ -148,6 +148,8 @@ class Attention(nn.Module):
                 v_cache = v
             else:
                 assert N in [1, 2], f"x.shape {x.shape}"
+                if kv_cache_perturbation_weight is not None:
+                    self.v_cache *= kv_cache_perturbation_weight[B//2:, None, :, None]
                 k_cache = torch.cat([self.k_cache, k], dim=-2)
                 v_cache = torch.cat([self.v_cache, v], dim=-2)
 
@@ -195,8 +197,9 @@ class Block(nn.Module):
         self.norm2 = RMSNorm(dim)  
         self.mlp = FeedForward(dim, proj_drop) 
 
-    def forward(self, x: torch.Tensor, freqs_cis, attn_mask=None) -> torch.Tensor:
-        x = x + self.attn(self.norm1(x), freqs_cis, attn_mask=attn_mask)
+    def forward(self, x: torch.Tensor, freqs_cis, attn_mask=None, kv_cache_perturbation_weight=1) -> torch.Tensor:
+        x = x + self.attn(self.norm1(x), freqs_cis, attn_mask=attn_mask,
+                          kv_cache_perturbation_weight=kv_cache_perturbation_weight)
         x = x + self.mlp(self.norm2(x))
         return x
 
@@ -300,8 +303,9 @@ class ARModel(BaseModel):
         return self.forward_fn(input_ids, condition, return_labels)
 
     def forward_fn(self, input_ids, condition,
-                   return_labels=False, 
-                   is_sampling=False): 
+                   return_labels=False,
+                   kv_cache_perturbation_weight=None,
+                   is_sampling=False):
          
         labels = input_ids.clone() # [batch ,exit_patches]
         # prepend condition token
@@ -328,9 +332,10 @@ class ARModel(BaseModel):
         for idx, blk in enumerate(self.blocks):
             if self.use_checkpoint:
                 x = torch.utils.checkpoint.checkpoint(
-                        blk.forward, x, freqs_cis, attn_mask, use_reentrant=False)
+                        blk.forward, x, freqs_cis, attn_mask, kv_cache_perturbation_weight=kv_cache_perturbation_weight,
+                    use_reentrant=False)
             else:
-                x = blk(x, freqs_cis, attn_mask=attn_mask)  
+                x = blk(x, freqs_cis, attn_mask=attn_mask, kv_cache_perturbation_weight=kv_cache_perturbation_weight)
 
         x = self.norm(x)
         x = self.output(x)
@@ -346,6 +351,8 @@ class ARModel(BaseModel):
                  randomize_temperature,
                  guidance_scale_pow,
                  kv_cache=True,
+                 step_norm=True,
+                 softcfg_strength=1,
                  **kwargs): 
         condition = self.preprocess_condition(
             condition, cond_drop_prob=0.0)
@@ -356,7 +363,7 @@ class ARModel(BaseModel):
 
         if kv_cache:
             self.enable_kv_cache()
- 
+        kv_weight = 1
         for step in range(self.image_seq_len): 
             # ref: https://github.com/sail-sg/MDT/blob/441d6a1d49781dbca22b708bbd9ed81e9e3bdee4/masked_diffusion/models.py#L513C13-L513C23
             scale_pow = torch.ones((1), device=device) * guidance_scale_pow
@@ -366,7 +373,8 @@ class ARModel(BaseModel):
             if guidance_scale != 0: 
                 logits = self.forward_fn(
                     torch.cat([ids, ids], dim=0),
-                    torch.cat([condition, self.get_none_condition(condition)], dim=0), is_sampling=True)
+                    torch.cat([condition, self.get_none_condition(condition)], dim=0),
+                    kv_cache_perturbation_weight=kv_weight if softcfg_strength > 0 else 1, is_sampling=True)
                 cond_logits, uncond_logits = logits[:num_samples], logits[num_samples:]
                 logits = uncond_logits + (cond_logits - uncond_logits) * cfg_scale
             else:
@@ -379,8 +387,58 @@ class ARModel(BaseModel):
             logits = logits / randomize_temperature
             probs = F.softmax(logits, dim=-1)
             sampled = torch.multinomial(probs, num_samples=1)
-            ids = torch.cat((ids, sampled), dim = -1) 
-            
+            ids = torch.cat((ids, sampled), dim = -1)
+
+            if guidance_scale != 0 and softcfg_strength > 0:
+                with torch.no_grad():
+
+                    probs_cond = F.softmax(cond_logits[:, -1] / randomize_temperature, dim=-1)
+                    max_prob = torch.gather(probs_cond, dim=1, index=sampled)
+
+                    # oneminusentropy = 1-self.compute_normalized_entropy(logits_cond[:,-1]/ randomize_temperature, self.target_codebook_size).unsqueeze(-1)
+                    # max_prob = probs.max(dim=-1, keepdim=True)[0]
+
+                    if step == 0:
+                        confidence = torch.zeros_like(max_prob)
+                    else:
+                        confidence = torch.cat([confidence, max_prob], dim=1)
+
+                    kv_weight = 1 - confidence
+                    if step_norm and step > 0:  # the first token and second token do not need step norm
+                        last_step_confidence = 1 - confidence[:, 1:-1] / (
+                                    confidence[:, 1:-1].sum(dim=-1, keepdim=True) + 1e-5)
+                        last_step_confidence = last_step_confidence.pow(softcfg_strength)
+                        last_step_confidence[last_step_confidence < 0.05] = 0.05
+
+                        kv_weight[:, 1:] = 1 - confidence[:, 1:] / (confidence[:, 1:].sum(dim=-1, keepdim=True) + 1e-5)
+                        kv_weight = kv_weight.pow(softcfg_strength)
+                        kv_weight[kv_weight < 0.05] = 0.05
+                        kv_weight[:, 1:-1] /= last_step_confidence
+                    else:
+                        kv_weight[:, :-1] = 1
+
         self.disable_kv_cache()
         return ids
 
+
+    def compute_normalized_entropy(self, logits, vocab_size):
+            """
+            计算 normalized entropy，范围在 [0, 1]。
+
+            参数:
+                logits: [B, V]，当前 step 的 logits（只取最后一个 token）
+                vocab_size: int，词表大小
+
+            返回:
+                norm_entropy: [B,]，归一化后的 entropy
+            """
+            probs = F.softmax(logits, dim=-1)
+            log_probs = F.log_softmax(logits, dim=-1)
+            entropy = -(probs * log_probs).sum(dim=-1)  # [B]
+
+            H_max = torch.log(torch.tensor(vocab_size, dtype=entropy.dtype, device=entropy.device))
+            # H_max = torch.max(max_h, entropy)
+
+            norm_entropy = entropy / H_max  # → [0, 1]
+
+            return norm_entropy
