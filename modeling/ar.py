@@ -149,7 +149,7 @@ class Attention(nn.Module):
             else:
                 assert N in [1, 2], f"x.shape {x.shape}"
                 if kv_cache_perturbation_weight is not None:
-                    self.v_cache *= kv_cache_perturbation_weight[B//2:, None, :, None]
+                    self.v_cache[self.v_cache.shape[0] // 2:, :, :, :] *= kv_cache_perturbation_weight[:, None, :, None]
                 k_cache = torch.cat([self.k_cache, k], dim=-2)
                 v_cache = torch.cat([self.v_cache, v], dim=-2)
 
