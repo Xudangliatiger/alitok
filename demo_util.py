@@ -39,7 +39,9 @@ def sample_fn(generator,
               softmax_temperature_annealing=False,
               num_sample_steps=8,
               device="cuda",
-              return_tensor=False):
+              return_tensor=False,
+              softcfg_strength=1,  # 添加此参数
+              step_norm=True):  # 添加此参数
     generator.eval()
     tokenizer.eval()
     if labels is None:
@@ -56,7 +58,9 @@ def sample_fn(generator,
         guidance_scale_pow=guidance_scale_pow,
         randomize_temperature=randomize_temperature,
         softmax_temperature_annealing=softmax_temperature_annealing,
-        num_sample_steps=num_sample_steps)
+        num_sample_steps=num_sample_steps,
+        softcfg_strength=softcfg_strength,
+        step_norm=step_norm)
     
     generated_image = tokenizer.decode_tokens(
         generated_tokens.view(generated_tokens.shape[0], -1)
